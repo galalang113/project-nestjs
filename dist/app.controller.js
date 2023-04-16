@@ -17,7 +17,16 @@ let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
+    homePage() {
+        return { home: 'home page' };
+    }
 };
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "homePage", null);
 AppController = __decorate([
     (0, swagger_1.ApiTags)('home'),
     (0, common_1.Controller)(),
