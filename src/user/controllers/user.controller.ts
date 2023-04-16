@@ -1,5 +1,5 @@
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger'
-import { Controller, Get, UseGuards } from '@nestjs/common'
+import { Controller, Get, UseGuards, Post, Body } from '@nestjs/common'
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard'
 import { UserService } from '../services/user.service'
 
@@ -13,5 +13,10 @@ export class UserController {
 	@Get('profile')
 	async getProfile() {
 		return this.userService.findAll()
+	}
+
+	@Post()
+	async create(@Body() body: any) {
+		return this.userService.create(body)
 	}
 }
