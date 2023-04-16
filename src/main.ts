@@ -39,7 +39,7 @@ async function bootstrap() {
 	SwaggerModule.setup('api', app, document)
 
 	const logger = new Logger(AppModule.name)
-	logger.info('bootstrap', `Server is listening on port ${3000}`)
-	await app.listen(3000)
+	logger.info('bootstrap', `Server is listening on port ${process.env.PORT || 3000}`)
+	await app.listen(process.env.PORT || 3000)
 }
 bootstrap()
