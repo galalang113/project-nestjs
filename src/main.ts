@@ -1,21 +1,30 @@
 import { ValidationPipe } from '@nestjs/common'
-import { NestFactory } from '@nestjs/core'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as compression from 'compression'
+import * as express from 'express'
 import { AppModule } from './app.module'
+import { HttpExceptionFilter } from './utils/filters/http-exception.filter'
 import { LoggingInterceptor } from './utils/logger'
 import { Logger } from './utils/logger/log-console.config'
-import { AllExceptionFilter } from './utils/filters/all-exception.filter'
+import { join } from 'path'
+import { AllExceptionsFilter } from './utils/filters/all-exception.filter'
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule, {
+	const server = express()
+	const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter(server), {
 		logger: false,
 	})
+
+	const { httpAdapter } = app.get(HttpAdapterHost)
+
+	app.useStaticAssets(join(__dirname, '..', 'public'))
 
 	app.enableShutdownHooks()
 	app.useGlobalPipes(new ValidationPipe())
 	app.useGlobalInterceptors(new LoggingInterceptor())
-	app.useGlobalFilters(new AllExceptionFilter())
+	app.useGlobalFilters(new HttpExceptionFilter(), new AllExceptionsFilter(httpAdapter))
 	app.use(compression())
 
 	const options = new DocumentBuilder()

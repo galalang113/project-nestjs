@@ -6,9 +6,11 @@ import { AuthController } from './controllers/auth.controller'
 import { AuthService } from './services/auth.service'
 import { JwtStrategy } from './strategy/jwt.strategy'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { RedisModule } from 'src/redis/redis.module'
 
 @Module({
 	imports: [
+		RedisModule,
 		UserModule,
 		PassportModule,
 		JwtModule.registerAsync({
