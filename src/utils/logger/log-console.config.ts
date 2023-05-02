@@ -26,8 +26,15 @@ export class Logger {
 		const timestamp = this.generateTimeStamp()
 		process.stdout.write(`${Colorize.yellow('[Nestjs]')} ${timestamp} ${Colorize.yellow(`[${this.context}]`)}${Colorize.yellow(`:${funcName} -> ${message}`)}\n`)
 	}
-	error(funcName, message) {
+	error(funcName, message, error?: any) {
 		const timestamp = this.generateTimeStamp()
-		process.stdout.write(`${Colorize.red('[Nestjs]')} ${timestamp} ${Colorize.yellow(`[${this.context}]`)}${Colorize.red(`:${funcName} -> ${message}`)}\n`)
+
+		if (error) {
+			if (error instanceof Error) error = error.message
+			else error = JSON.stringify(error)
+		}
+		process.stdout.write(
+			`${Colorize.red('[Nestjs]')} ${timestamp} ${Colorize.yellow(`[${this.context}]`)}${Colorize.red(`:${funcName} -> ${message}`)} ${error ? ': ' : ''}${error}\n`,
+		)
 	}
 }
