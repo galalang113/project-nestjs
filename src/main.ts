@@ -1,16 +1,15 @@
 import { ValidationPipe } from '@nestjs/common'
-import { HttpAdapterHost, NestFactory } from '@nestjs/core'
+import { NestFactory } from '@nestjs/core'
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as compression from 'compression'
 import * as express from 'express'
+import { join } from 'path'
+import { AppShutdownService } from './app-config/services/app-shutdown.service'
 import { AppModule } from './app.module'
 import { HttpExceptionFilter } from './utils/filters/http-exception.filter'
 import { LoggingInterceptor } from './utils/logger'
 import { Logger } from './utils/logger/log-console.config'
-import { join } from 'path'
-import { AllExceptionsFilter } from './utils/filters/all-exception.filter'
-import { AppShutdownService } from './app-config/services/app-shutdown.service'
 
 async function bootstrap() {
 	const server = express()
@@ -18,14 +17,12 @@ async function bootstrap() {
 		logger: false,
 	})
 
-	const { httpAdapter } = app.get(HttpAdapterHost)
-
 	app.useStaticAssets(join(__dirname, '..', 'public'))
 
 	app.enableShutdownHooks()
 	app.useGlobalPipes(new ValidationPipe())
 	app.useGlobalInterceptors(new LoggingInterceptor())
-	app.useGlobalFilters(new HttpExceptionFilter(), new AllExceptionsFilter(httpAdapter))
+	app.useGlobalFilters(new HttpExceptionFilter())
 	app.use(compression())
 	app.get(AppShutdownService).subscribeToShutdown(() => app.close())
 

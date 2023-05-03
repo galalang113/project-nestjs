@@ -34,7 +34,9 @@ export class Logger {
 			else error = JSON.stringify(error)
 		}
 		process.stdout.write(
-			`${Colorize.red('[Nestjs]')} ${timestamp} ${Colorize.yellow(`[${this.context}]`)}${Colorize.red(`:${funcName} -> ${message}`)} ${error ? ': ' : ''}${error}\n`,
+			`${Colorize.red('[Nestjs]')} ${timestamp} ${Colorize.yellow(`[${this.context}]`)}${Colorize.red(`:${funcName} -> ${message}`)} ${error ? ': ' : ''}${
+				error ? error : ''
+			}\n`,
 		)
 	}
 }
