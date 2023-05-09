@@ -1,7 +1,7 @@
-import { Injectable, OnModuleInit } from '@nestjs/common'
-import { AppConfigDto } from '../dto/config.dto'
+import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Logger } from 'src/utils/logger/log-console.config'
+import { AppConfigDto } from '../dto/config.dto'
 import { AppShutdownService } from './app-shutdown.service'
 import _ = require('lodash')
 @Injectable()
@@ -31,6 +31,10 @@ export class AppConfigService {
 			if (this.appConfig.mongoose) {
 				this.appConfig.mongoose.uri = this.configService.get<string>('MONGODB_URL')
 			}
+
+			if (this.appConfig.rabbitmq) {
+				this.appConfig.rabbitmq.uri = this.configService.get<string>('RABBITMQ_URI')
+			}
 			// console.log('appConfigInit', this.appConfig)
 		} catch (error) {
 			this.logger.error('onModuleInit', 'Init error', error)
@@ -55,5 +59,8 @@ export class AppConfigService {
 	}
 	get mongoose() {
 		return this.appConfig.mongoose
+	}
+	get rabbitmq() {
+		return this.appConfig.rabbitmq
 	}
 }

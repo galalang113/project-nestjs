@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator'
+import { ModuleServiceActiveConfiguration, RabbitMQConfiguration } from '../interface/app-config.interface'
 
 export class AppConfigDto {
 	@IsNotEmpty()
@@ -11,4 +12,10 @@ export class AppConfigDto {
 	mongoose: {
 		uri: string
 	}
+
+	@IsNotEmpty()
+	rabbitmq: RabbitMQConfiguration
+
+	@IsNotEmpty()
+	moduleServiceActive: ModuleServiceActiveConfiguration
 }
